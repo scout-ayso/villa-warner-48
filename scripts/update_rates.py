@@ -16,8 +16,16 @@ import html
 import re
 import sys
 import urllib.request
-from datetime import date, timedelta
+from datetime import date, datetime
 from pathlib import Path
+
+try:
+    from zoneinfo import ZoneInfo
+    def pacific_today():
+        return datetime.now(ZoneInfo("America/Los_Angeles")).date()
+except Exception:  # tzdata missing — at the ~17-18h UTC run times, UTC date == Pacific date
+    def pacific_today():
+        return date.today()
 
 SOURCE_URL = "https://morningreport.7gre.me/"
 INDEX = Path(__file__).resolve().parent.parent / "index.html"
@@ -79,8 +87,21 @@ def main():
         rep_date = date(yr, mo, da)
     except ValueError:
         fail(f"invalid report date {mo}/{da}/{yr}")
-    if abs((date.today() - rep_date).days) > 3:
-        fail(f"report date {rep_date} is not within 3 days of today {date.today()}")
+
+    # Only publish when the report is showing TODAY's date (Pacific). The schedule
+    # fires at the PST and PDT equivalents of 10:31am; in the off-season one of
+    # those is an hour early, so the report may still show an older date — in that
+    # case skip cleanly (exit 0, no commit, no alarm) and let the on-time run do it.
+    today = pacific_today()
+    delta = (today - rep_date).days
+    if delta < 0:
+        fail(f"report date {rep_date} is in the future vs Pacific today {today}")
+    if 1 <= delta <= 3:
+        print(f"Report still shows {rep_date}; Pacific today is {today}. "
+              f"Not posted yet — skipping with no changes.")
+        sys.exit(0)
+    if delta > 3:
+        fail(f"report date {rep_date} is {delta} days stale vs {today}")
 
     for key, (rate, apr) in rates.items():
         rf, af = float(rate), float(apr)

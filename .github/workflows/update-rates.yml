@@ -3,13 +3,17 @@ name: Update mortgage rates
 # Pulls the daily rates + assumptions from the Seven Gables morning report and
 # patches index.html. Render auto-deploys on the resulting push.
 #
-# The morning report posts at 10:30am Pacific. GitHub cron is UTC and does NOT
-# adjust for daylight saving, so 19:30 UTC keeps us safely after 10:30 in both
-# PST (= 11:30 local) and PDT (= 12:30 local).
+# Target: 10:31am Pacific, right after the report's 10:30am post. GitHub cron is
+# UTC and does NOT shift for daylight saving, so we list both equivalents:
+#   18:31 UTC = 10:31 PST (winter)   |   17:31 UTC = 10:31 PDT (summer)
+# Whichever one isn't "10:31 local" that day runs an hour early; the script's
+# date guard makes that early run skip cleanly until the report shows today's
+# date, so effectively it updates at 10:31 Pacific year-round.
 
 on:
   schedule:
-    - cron: "30 19 * * *"
+    - cron: "31 17 * * *"   # 10:31 PDT (summer) / 09:31 PST
+    - cron: "31 18 * * *"   # 10:31 PST (winter) / 11:31 PDT
   workflow_dispatch: {}   # allows a manual run from the Actions tab
 
 permissions:
