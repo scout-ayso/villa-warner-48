@@ -229,14 +229,18 @@
         <form class="showing-form" id="showingForm"
               action="https://api.web3forms.com/submit" method="POST" novalidate>
           <input type="hidden" name="access_key" value="1a10f8f3-6637-4274-b54e-466c4a37c8f3" />
-          <input type="hidden" name="subject" value="New inquiry — Villa Warner #48" />
+          <input type="hidden" name="subject" value="New inquiry — Villa Warner #48 ($509,900)" />
           <input type="hidden" name="from_name" value="Villa Warner Listing Site" />
+          <!-- Context fields: these show up in Matthew's email so he knows the source at a glance -->
+          <input type="hidden" name="Property" value="6600 Warner Ave #48 — Villa Warner, Huntington Beach, CA 92647" />
+          <input type="hidden" name="List Price" value="$509,900 · MLS #OC26075843" />
+          <input type="hidden" name="Lead Source" value="Flyer QR code → villa-warner-48.onrender.com" />
           <!-- Honeypot: bots fill this; humans don't see it -->
           <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
           <div class="field">
             <label for="f-name">Name <span class="req" aria-hidden="true">*</span></label>
-            <input type="text" id="f-name" name="name" autocomplete="name" required />
+            <input type="text" id="f-name" name="Name" autocomplete="name" required />
             <span class="field-error" data-error-for="f-name"></span>
           </div>
 
@@ -248,19 +252,19 @@
             </div>
             <div class="field">
               <label for="f-phone">Phone <span class="req" aria-hidden="true">*</span></label>
-              <input type="tel" id="f-phone" name="phone" autocomplete="tel" required />
+              <input type="tel" id="f-phone" name="Phone" autocomplete="tel" required />
               <span class="field-error" data-error-for="f-phone"></span>
             </div>
           </div>
 
           <div class="field">
             <label for="f-when">Preferred date / time <span class="optional">(optional)</span></label>
-            <input type="text" id="f-when" name="preferred_time" placeholder="e.g. Sat morning, or June 8 at 2pm" />
+            <input type="text" id="f-when" name="Preferred Date &amp; Time" placeholder="e.g. Sat morning, or June 8 at 2pm" />
           </div>
 
           <div class="field">
             <label for="f-msg">Message <span class="optional">(optional)</span></label>
-            <textarea id="f-msg" name="message" rows="4" placeholder="Anything you'd like Matthew to know"></textarea>
+            <textarea id="f-msg" name="Message" rows="4" placeholder="Anything you'd like Matthew to know"></textarea>
           </div>
 
           <button type="submit" class="btn btn-solid btn-block" id="submitBtn">Send to Matthew</button>
