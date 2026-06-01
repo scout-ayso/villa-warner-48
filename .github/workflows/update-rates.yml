@@ -1,0 +1,42 @@
+name: Update mortgage rates
+
+# Pulls the daily rates + assumptions from the Seven Gables morning report and
+# patches index.html. Render auto-deploys on the resulting push.
+#
+# The morning report posts at 10:30am Pacific. GitHub cron is UTC and does NOT
+# adjust for daylight saving, so 19:30 UTC keeps us safely after 10:30 in both
+# PST (= 11:30 local) and PDT (= 12:30 local).
+
+on:
+  schedule:
+    - cron: "30 19 * * *"
+  workflow_dispatch: {}   # allows a manual run from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-rates
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch + patch rates (fail-safe; no write on any error)
+        run: python3 scripts/update_rates.py
+
+      - name: Commit & push if changed
+        run: |
+          if [[ -n "$(git status --porcelain index.html)" ]]; then
+            git config user.name  "villa-warner-rates-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "chore: auto-update mortgage rates from morning report ($(date -u +%F))"
+            git push
+            echo "Rates updated and pushed."
+          else
+            echo "No rate changes today — nothing to commit."
+          fi

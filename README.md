@@ -47,6 +47,21 @@ In `index.html`, the **Financing** section is marked with
 
 Also update "Rates effective …" and the rate-assumption dates in the compliance footer if needed.
 
+> **Note:** rate editing is now mostly automatic — see below.
+
+## Automatic daily rate updates
+
+A GitHub Actions workflow (`.github/workflows/update-rates.yml`) refreshes the
+rates every day so you don't have to edit them by hand.
+
+- **Source:** the public Seven Gables morning report — <https://morningreport.7gre.me/>
+- **When:** ~19:30 UTC daily (11:30am PST / 12:30pm PDT — safely after the report's 10:30am Pacific post; GitHub cron is UTC and doesn't shift for DST).
+- **What it updates:** the four rates + APRs, the "As of" / "Rates effective" dates, and the rate-assumptions paragraph — only the elements tagged `data-rate="…"` in `index.html`. The fixed corporate legal text (Seven Gables/CalHFF NMLS lines) is never touched.
+- **How:** `scripts/update_rates.py` fetches + parses the report, validates, patches `index.html`, commits, and Render auto-deploys the push.
+- **Fail-safe:** if the report can't be fetched, a value is missing, or a rate is outside a sane range (1–15%, APR ≥ rate, date within 3 days of today), the script exits without writing — the site keeps the last good values and GitHub emails you about the failed run.
+- **Run it manually / test:** Actions tab → "Update mortgage rates" → *Run workflow*.
+- **If the report's layout ever changes** and parsing breaks, the fail-safe just freezes the rates; update the regexes in `scripts/update_rates.py`.
+
 ## Deploy to Render (static site)
 
 1. `git init`, commit, push to a new GitHub repo.
