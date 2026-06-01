@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: villa-warner-48
+    runtime: static
+    # No build step needed — this is plain HTML/CSS/JS.
+    buildCommand: ""
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
