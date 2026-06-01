@@ -19,7 +19,7 @@ python3 -m http.server 4321
 ### 1. Wire up the form email (required)
 
 The "Ask a Question" contact form posts to **Web3Forms** so submissions email
-**matthewn@sevengables.com** (the listing agent).
+**matthewn@sevengables.com** (the point-of-contact agent).
 
 1. Go to <https://web3forms.com>, create a free Access Key pointed at `matthewn@sevengables.com`.
 2. In `index.html`, find:
@@ -59,5 +59,5 @@ Also update "Rates effective …" and the rate-assumption dates in the complianc
 
 ## Contacts
 
-- **Listing agent (all buyer inquiries):** Matthew Nowotny — Seven Gables Real Estate — (657) 342-0611 — matthewn@sevengables.com
+- **Contact agent (all buyer inquiries):** Matthew Nowotny, Real Estate Advisor — Seven Gables Real Estate — (657) 342-0611 — matthewn@sevengables.com
 - **Lender (informational only):** Brett Hickman — Home First Financial — (949) 350-8005 — brett.hickman@yourhomefirst.com
