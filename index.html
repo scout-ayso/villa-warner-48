@@ -44,7 +44,7 @@
         <a class="btn btn-ghost" href="tel:+16573420611">
           <span aria-hidden="true">📞</span> Call / Text Matthew
         </a>
-        <a class="btn btn-solid" href="#showing">Request a Showing</a>
+        <a class="btn btn-solid" href="#showing">Ask a Question</a>
       </nav>
     </div>
   </header>
@@ -208,14 +208,15 @@
       </div>
     </section>
 
-    <!-- ============ REQUEST A SHOWING ============ -->
+    <!-- ============ ASK A QUESTION / CONTACT FORM ============ -->
     <section class="section showing-section" id="showing" aria-labelledby="showing-title">
       <div class="container showing-grid">
         <div class="showing-intro">
-          <p class="eyebrow">Request a Showing</p>
-          <h2 class="section-title" id="showing-title">Come see it in person</h2>
+          <p class="eyebrow">Ask a Question</p>
+          <h2 class="section-title" id="showing-title">Have a question about this home?</h2>
           <p class="muted-copy">
-            Send a note to listing agent Matthew Nowotny and he'll be in touch to arrange a time.
+            Send a note to listing agent Matthew Nowotny — ask about pricing, the HOA, availability,
+            or set up a private showing. He'll get right back to you.
           </p>
           <p class="muted-copy">
             Prefer to talk now? Call or text Matthew at
@@ -228,7 +229,7 @@
         <form class="showing-form" id="showingForm"
               action="https://api.web3forms.com/submit" method="POST" novalidate>
           <input type="hidden" name="access_key" value="1a10f8f3-6637-4274-b54e-466c4a37c8f3" />
-          <input type="hidden" name="subject" value="New showing request — Villa Warner #48" />
+          <input type="hidden" name="subject" value="New inquiry — Villa Warner #48" />
           <input type="hidden" name="from_name" value="Villa Warner Listing Site" />
           <!-- Honeypot: bots fill this; humans don't see it -->
           <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -262,7 +263,7 @@
             <textarea id="f-msg" name="message" rows="4" placeholder="Anything you'd like Matthew to know"></textarea>
           </div>
 
-          <button type="submit" class="btn btn-solid btn-block" id="submitBtn">Request Showing</button>
+          <button type="submit" class="btn btn-solid btn-block" id="submitBtn">Send to Matthew</button>
 
           <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
           <p class="form-fallback">

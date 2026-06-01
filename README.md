@@ -18,7 +18,7 @@ python3 -m http.server 4321
 
 ### 1. Wire up the form email (required)
 
-The "Request a Showing" form posts to **Web3Forms** so submissions email
+The "Ask a Question" contact form posts to **Web3Forms** so submissions email
 **matthewn@sevengables.com** (the listing agent).
 
 1. Go to <https://web3forms.com>, create a free Access Key pointed at `matthewn@sevengables.com`.

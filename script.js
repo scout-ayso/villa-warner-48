@@ -176,7 +176,7 @@
     // Honeypot: if filled, silently pretend success (drop the bot)
     var hp = form.querySelector('input[name="botcheck"]');
     if (hp && hp.checked) {
-      setStatus('Thank you — your request has been sent.', 'success');
+      setStatus('Thank you — your message has been sent.', 'success');
       form.reset();
       return;
     }
@@ -201,7 +201,7 @@
       .then(function (result) {
         if (result.ok && result.json.success) {
           form.reset();
-          setStatus('Thank you — your request has been sent. Matthew will be in touch shortly.', 'success');
+          setStatus('Thank you — your message has been sent. Matthew will be in touch shortly.', 'success');
         } else {
           var m = (result.json && result.json.message) ? result.json.message : '';
           setStatus('Sorry, something went wrong' + (m ? ' (' + m + ')' : '') +
@@ -213,7 +213,7 @@
       })
       .then(function () {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Request Showing';
+        submitBtn.textContent = 'Send to Matthew';
       });
   });
 
