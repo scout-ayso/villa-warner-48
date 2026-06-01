@@ -168,13 +168,26 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   justify-content: space-between;
   gap: 12px;
 }
-.header-logo img { height: 26px; width: auto; opacity: 0; transition: opacity 0.3s ease; }
+.header-logo { flex: 0 0 auto; line-height: 0; }
+/* width:auto + max-width:none keeps the wide logo's aspect ratio intact even
+   when the flex row is tight (otherwise it gets squeezed/distorted on mobile) */
+.header-logo img { height: 26px; width: auto; max-width: none; opacity: 0; transition: opacity 0.3s ease; }
 .site-header.scrolled .header-logo img { opacity: 1; }
-.header-actions { display: flex; align-items: center; gap: 10px; }
+.header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.btn-text-short { display: none; }
 
-/* On very small screens, trim the call button label */
-@media (max-width: 460px) {
-  .header-actions .btn { padding: 10px 12px; font-size: 12px; }
+/* On small screens, shrink the logo a touch and swap "Call / Text Matthew" -> "Call"
+   so the logo + buttons fit the bar without crowding or distortion */
+@media (max-width: 560px) {
+  .header-logo img { height: 20px; }
+  .header-actions { gap: 8px; }
+  .header-actions .btn { padding: 9px 12px; font-size: 12px; }
+  .btn-text-full { display: none; }
+  .btn-text-short { display: inline; }
+}
+@media (max-width: 380px) {
+  .header-logo img { height: 18px; }
+  .header-actions .btn { padding: 9px 10px; }
 }
 
 /* ============================================================
@@ -565,6 +578,10 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   border-radius: 50%;
   border: 2px solid var(--sage-soft);
 }
+/* min-width:0 lets this flex column shrink below its content's intrinsic width;
+   without it, a long unbreakable string (e.g. the lender's email) forces the
+   card wider than its background and "runs off" on narrow screens */
+.agent-body { min-width: 0; }
 .agent-role {
   font-size: 11px;
   font-weight: 600;
@@ -574,9 +591,9 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   margin: 0 0 4px;
 }
 .agent-name { font-size: 1.3rem; margin: 0 0 8px; }
-.agent-line { font-size: 13px; color: var(--muted); margin: 0 0 3px; line-height: 1.5; }
+.agent-line { font-size: 13px; color: var(--muted); margin: 0 0 3px; line-height: 1.5; overflow-wrap: break-word; }
 .agent-contact { font-size: 13.5px; margin: 10px 0 0; line-height: 1.7; }
-.agent-contact a { color: var(--sand); font-weight: 500; }
+.agent-contact a { color: var(--sand); font-weight: 500; overflow-wrap: anywhere; }
 
 @media (min-width: 760px) {
   .agent-cards { grid-template-columns: 1fr 1fr; gap: 24px; }
