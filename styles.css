@@ -595,6 +595,13 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
 .agent-contact { font-size: 13.5px; margin: 10px 0 0; line-height: 1.7; }
 .agent-contact a { color: var(--sand); font-weight: 500; overflow-wrap: anywhere; }
 
+/* On phones, stack the card (photo on top, details full-width below) so long
+   contact lines like the lender's email sit on a single line without wrapping */
+@media (max-width: 480px) {
+  .agent-card { flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+  .agent-photo { width: 84px; height: 84px; }
+}
+
 @media (min-width: 760px) {
   .agent-cards { grid-template-columns: 1fr 1fr; gap: 24px; }
 }
