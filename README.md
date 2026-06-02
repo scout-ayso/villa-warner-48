@@ -49,28 +49,26 @@ Also update "Rates effective …" and the rate-assumption dates in the complianc
 
 > **Note:** rate editing is now mostly automatic — see below.
 
-## Live rate updates (Airtable, client-side)
+## Automatic rate updates (GitHub Action + Airtable)
 
-On page load, `script.js` fetches the latest mortgage rates straight from the
-Seven Gables **Airtable** (the same source the morning report uses) and fills in
-the `data-rate="…"` elements. The values hardcoded in `index.html` are the
-fallback — if the fetch fails (offline, JS disabled, token unset), the page just
-shows the last-known static rates.
+A GitHub Actions workflow (`.github/workflows/update-rates.yml`) pulls the latest
+mortgage rates from the Seven Gables **Airtable** and bakes them into the HTML, so
+the token stays server-side and **never appears in the published page**.
 
-- **Source:** base **"Interest Rates"** → table **"From Kevin"** (`appxtXl28vrEIHz0Z` / `tblVrlngw97M9CA5j`), latest row by `Timestamp`. Rates are stored as decimals (`0.0575` = 5.75%); `script.js` converts them. The `display date` field drives the "As of" / "Rates effective" / assumptions dates. (These rates update roughly weekly.)
-- **What it updates:** the four rates + APRs and the dates — only `data-rate="…"` elements. Fixed corporate legal text is never touched.
+- **Source:** base **"Interest Rates"** → table **"From Kevin"** (`appxtXl28vrEIHz0Z` / `tblVrlngw97M9CA5j`), latest row by `Timestamp`. Rates are stored as decimals (`0.0575` = 5.75%); the script converts them. The `display date` field drives the "As of" / "Rates effective" / assumptions dates. (These rates change ~weekly.)
+- **When:** every 15 minutes (`*/15 * * * *`), best-effort — GitHub's scheduled triggers can run late. Most runs are no-ops; it only commits when a value actually changed. You can also run it on demand: Actions tab → "Update mortgage rates" → *Run workflow*.
+- **What it updates:** the four rates + APRs and the dates — only `data-rate="…"` elements in `index.html`. Fixed corporate legal text is never touched.
+- **How:** `scripts/update_rates.py` fetches Airtable, validates, patches `index.html`, commits, and Render auto-deploys the push.
+- **Fail-safe:** if Airtable can't be reached, a value is missing, or a rate is out of range (1–15%, APR ≥ rate), the script exits without writing — the site keeps the last good values and GitHub emails you about the failed run.
 
-### ⚠️ Token setup (required, security-critical)
+### Token setup (required)
 
-The token ships inside this public page, so it MUST be **read-only and scoped to
-only the "Interest Rates" base**:
+The token is stored as an encrypted **GitHub Actions secret** named `AIRTABLE_TOKEN`
+— it is never committed or shipped to the browser.
 
-1. Airtable → **Builder Hub → Personal access tokens → Create token**.
-2. Scope: **`data.records:read`** only. Access: **only the "Interest Rates" base**.
-3. Paste it into `script.js`, replacing `AIRTABLE_READONLY_TOKEN`.
-4. **Revoke any broad/edit token** — never put a token with write access or
-   multi-base access in this file. Worst case for the scoped read-only token is
-   that someone can read the (already public) rate numbers.
+1. Airtable → **Builder Hub → Personal access tokens → Create token**. Scope: **`data.records:read`**; access: **only the "Interest Rates" base**.
+2. Repo → **Settings → Secrets and variables → Actions → New repository secret**, name `AIRTABLE_TOKEN`, paste the token. (Or `gh secret set AIRTABLE_TOKEN`.)
+3. **Revoke** any broad/edit token that was shared previously.
 
 To change rates by hand instead, edit the `data-rate="…"` values in `index.html`.
 

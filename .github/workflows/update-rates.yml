@@ -1,0 +1,45 @@
+name: Update mortgage rates
+
+# Pulls the latest rates from the Seven Gables Airtable and bakes them into
+# index.html. Render auto-deploys on the resulting push. The token is stored as
+# the encrypted secret AIRTABLE_TOKEN and never appears in the published site.
+#
+# Rates change ~weekly, so most runs are no-ops (they only commit when a value
+# actually changed). Note: GitHub's scheduled triggers are best-effort and can
+# run later than the requested time, especially at tight intervals.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 minutes (best-effort)
+  workflow_dispatch: {}      # manual run from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-rates
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pull rates from Airtable (fail-safe; no write on any error)
+        env:
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+        run: python3 scripts/update_rates.py
+
+      - name: Commit & push if changed
+        run: |
+          if [[ -n "$(git status --porcelain index.html)" ]]; then
+            git config user.name  "villa-warner-rates-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "chore: update mortgage rates from Airtable ($(date -u +%F))"
+            git push
+            echo "Rates updated and pushed."
+          else
+            echo "No rate changes — nothing to commit."
+          fi
