@@ -49,18 +49,30 @@ Also update "Rates effective …" and the rate-assumption dates in the complianc
 
 > **Note:** rate editing is now mostly automatic — see below.
 
-## Automatic daily rate updates
+## Live rate updates (Airtable, client-side)
 
-A GitHub Actions workflow (`.github/workflows/update-rates.yml`) refreshes the
-rates every day so you don't have to edit them by hand.
+On page load, `script.js` fetches the latest mortgage rates straight from the
+Seven Gables **Airtable** (the same source the morning report uses) and fills in
+the `data-rate="…"` elements. The values hardcoded in `index.html` are the
+fallback — if the fetch fails (offline, JS disabled, token unset), the page just
+shows the last-known static rates.
 
-- **Source:** the public Seven Gables morning report — <https://morningreport.7gre.me/>
-- **When:** 10:31am Pacific daily, right after the report's 10:30am post. GitHub cron is UTC and doesn't shift for DST, so it's scheduled at both 17:31 UTC (10:31 PDT) and 18:31 UTC (10:31 PST); the off-season run lands an hour early and the date guard makes it skip cleanly until the report shows today's date.
-- **What it updates:** the four rates + APRs, the "As of" / "Rates effective" dates, and the rate-assumptions paragraph — only the elements tagged `data-rate="…"` in `index.html`. The fixed corporate legal text (Seven Gables/CalHFF NMLS lines) is never touched.
-- **How:** `scripts/update_rates.py` fetches + parses the report, validates, patches `index.html`, commits, and Render auto-deploys the push.
-- **Fail-safe:** if the report can't be fetched, a value is missing, or a rate is outside a sane range (1–15%, APR ≥ rate, date within 3 days of today), the script exits without writing — the site keeps the last good values and GitHub emails you about the failed run.
-- **Run it manually / test:** Actions tab → "Update mortgage rates" → *Run workflow*.
-- **If the report's layout ever changes** and parsing breaks, the fail-safe just freezes the rates; update the regexes in `scripts/update_rates.py`.
+- **Source:** base **"Interest Rates"** → table **"From Kevin"** (`appxtXl28vrEIHz0Z` / `tblVrlngw97M9CA5j`), latest row by `Timestamp`. Rates are stored as decimals (`0.0575` = 5.75%); `script.js` converts them. The `display date` field drives the "As of" / "Rates effective" / assumptions dates. (These rates update roughly weekly.)
+- **What it updates:** the four rates + APRs and the dates — only `data-rate="…"` elements. Fixed corporate legal text is never touched.
+
+### ⚠️ Token setup (required, security-critical)
+
+The token ships inside this public page, so it MUST be **read-only and scoped to
+only the "Interest Rates" base**:
+
+1. Airtable → **Builder Hub → Personal access tokens → Create token**.
+2. Scope: **`data.records:read`** only. Access: **only the "Interest Rates" base**.
+3. Paste it into `script.js`, replacing `AIRTABLE_READONLY_TOKEN`.
+4. **Revoke any broad/edit token** — never put a token with write access or
+   multi-base access in this file. Worst case for the scoped read-only token is
+   that someone can read the (already public) rate numbers.
+
+To change rates by hand instead, edit the `data-rate="…"` values in `index.html`.
 
 ## Deploy to Render (static site)
 
