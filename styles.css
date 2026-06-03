@@ -153,7 +153,11 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   height: var(--header-h);
   display: flex;
   align-items: center;
-  background: transparent;
+  /* solid navy bar at all times (on desktop too, not just after scroll) */
+  background: rgba(32, 48, 58, 0.92);
+  -webkit-backdrop-filter: saturate(140%) blur(8px);
+  backdrop-filter: saturate(140%) blur(8px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
   transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
 }
 .site-header.scrolled {
@@ -225,7 +229,7 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   flex-direction: column;
   justify-content: space-between;
   padding-top: 84px;
-  padding-bottom: 60px;
+  padding-bottom: 112px;
 }
 .hero-brand { height: 56px; width: auto; align-self: flex-start; }
 .hero-title {
