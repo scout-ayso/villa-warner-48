@@ -198,7 +198,7 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   min-height: 92vh;
   min-height: 92svh;
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   overflow: hidden;
 }
 .hero-img {
@@ -220,29 +220,34 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   position: relative;
   z-index: 2;
   color: #fff;
-  padding-top: 110px;
-  padding-bottom: 44px;
+  /* fill the hero so the logo can pin to the top and the details to the bottom */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 84px;
+  padding-bottom: 60px;
 }
-.hero-brand { height: 30px; width: auto; margin-bottom: 22px; }
+.hero-brand { height: 56px; width: auto; align-self: flex-start; }
 .hero-title {
   color: #fff;
   font-size: clamp(2.1rem, 8vw, 4rem);
   font-weight: 500;
   max-width: 14ch;
-  margin-bottom: 16px;
+  margin: 0 0 22px;
   text-shadow: 0 1px 18px rgba(0, 0, 0, 0.25);
 }
+.hero-text .eyebrow { margin-bottom: 18px; }
 .hero-address {
   font-size: 15px;
   letter-spacing: 0.01em;
-  margin: 0 0 6px;
+  margin: 0 0 14px;
   color: rgba(255, 255, 255, 0.92);
 }
 .hero-price {
   font-family: var(--serif);
   font-size: clamp(1.8rem, 6vw, 2.6rem);
   font-weight: 600;
-  margin: 0 0 22px;
+  margin: 0 0 28px;
   color: #fff;
 }
 .stat-row {
@@ -251,7 +256,7 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   flex-wrap: wrap;
   gap: 10px 14px;
   margin: 0;
-  padding: 14px 0 0;
+  padding: 20px 0 0;
   border-top: 1px solid rgba(255, 255, 255, 0.25);
 }
 .stat-row li {
@@ -300,7 +305,8 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
         rgba(20, 30, 36, 0.50) 0%,
         rgba(20, 30, 36, 0.0) 78%);
   }
-  .hero-content { padding-top: 80px; padding-bottom: 46px; }
+  /* logo is hidden on mobile, so keep the details anchored at the bottom */
+  .hero-content { justify-content: flex-end; padding-top: 80px; padding-bottom: 46px; }
   /* keep the eyebrow from running to the edge on small phones */
   .hero-content .eyebrow { letter-spacing: 0.1em; font-size: 11px; }
 }
