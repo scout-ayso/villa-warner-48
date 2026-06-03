@@ -20,7 +20,16 @@ import re
 import sys
 import urllib.parse
 import urllib.request
+from datetime import date, datetime
 from pathlib import Path
+
+try:
+    from zoneinfo import ZoneInfo
+    def pacific_today():
+        return datetime.now(ZoneInfo("America/Los_Angeles")).date()
+except Exception:
+    def pacific_today():
+        return date.today()
 
 BASE = "appxtXl28vrEIHz0Z"
 TABLE = "tblVrlngw97M9CA5j"
@@ -110,6 +119,12 @@ def main():
     values["asof"] = dd
     values["assumptions-date"] = dd
     values["effective"] = f"{mo:02d}/{da:02d}/{yr % 100:02d}"
+
+    # Liveness heartbeat: today's Pacific date. Reached only after a successful
+    # fetch + validation (any failure exits earlier via skip()), so this date
+    # advancing each day is proof the whole pull is working.
+    pt = pacific_today()
+    values["checked"] = f"{pt:%b} {pt.day}, {pt.year}"  # e.g. "Jun 3, 2026"
 
     # ---- patch index.html (only inside data-rate spans) ----
     doc = INDEX.read_text(encoding="utf-8")
