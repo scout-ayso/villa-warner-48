@@ -270,6 +270,24 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
 }
 .stat-row strong { font-family: var(--serif); font-size: 18px; font-weight: 600; }
 
+/* ---- Mobile hero: solid header + logo from the top, drop the big hero logo ---- */
+@media (max-width: 768px) {
+  /* header reads as the solid dark bar (with its logo) before any scroll */
+  .site-header {
+    background: rgba(32, 48, 58, 0.92);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    backdrop-filter: saturate(140%) blur(8px);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .header-logo img { opacity: 1; }
+
+  /* the big logo on the photo is now redundant with the header logo */
+  .hero-brand { display: none; }
+
+  /* lift the eyebrow/title up into the space the logo vacated */
+  .hero-content { padding-top: 84px; padding-bottom: 92px; }
+}
+
 /* ============================================================
    GALLERY
    ============================================================ */
