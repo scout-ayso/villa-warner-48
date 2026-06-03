@@ -284,8 +284,25 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.18; mar
   /* the big logo on the photo is now redundant with the header logo */
   .hero-brand { display: none; }
 
-  /* lift the eyebrow/title up into the space the logo vacated */
-  .hero-content { padding-top: 84px; padding-bottom: 92px; }
+  /* tighter, better-balanced hero */
+  .hero { min-height: 84svh; }
+  /* moody, even scrim: blend the top into the header, keep the room visible in
+     the middle, and anchor a strong dark base for the text */
+  .hero-scrim {
+    background:
+      linear-gradient(to bottom,
+        rgba(20, 30, 36, 0.66) 0%,
+        rgba(20, 30, 36, 0.26) 16%,
+        rgba(20, 30, 36, 0.30) 40%,
+        rgba(20, 30, 36, 0.74) 72%,
+        rgba(20, 30, 36, 0.94) 100%),
+      linear-gradient(to right,
+        rgba(20, 30, 36, 0.50) 0%,
+        rgba(20, 30, 36, 0.0) 78%);
+  }
+  .hero-content { padding-top: 80px; padding-bottom: 46px; }
+  /* keep the eyebrow from running to the edge on small phones */
+  .hero-content .eyebrow { letter-spacing: 0.1em; font-size: 11px; }
 }
 
 /* ============================================================
